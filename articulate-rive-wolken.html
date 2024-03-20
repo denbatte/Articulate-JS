@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Wolken</title>
+    <meta charset="UTF-8" />
+  </head>
+
+  <body>
+
+    <canvas id="canvas" width="100" height="100"></canvas>
+
+    <!-- Rive script -->
+    <script src="https://unpkg.com/@rive-app/canvas@2.1.0"></script>
+
+    <script>    
+    // load Rive anumation
+    const r = new rive.Rive({
+        src: './articulate-rive-wolken.riv',
+        canvas: document.getElementById('canvas'),
+        autoplay: true,
+        stateMachines: 'State Machine 1',
+        layout: new rive.Layout({fit: rive.Fit.Contain }),
+        onLoad: (_) => {
+          // Get the inputs via the name of the state machine
+          const inputs = r.stateMachineInputs('State Machine 1');
+          // Find the input you want to set a value for, or trigger
+          const isCloudy = inputs.find(i => i.name === 'Cloudy');
+          
+          // Gebruik localstorage
+          window.addEventListener('storage', (event) => {
+              
+            // Als mood in de storage verandert dan ...
+            if (event.storageArea === sessionStorage && event.key === 'weather') {
+              switch (sessionStorage.getItem('weather')) {
+                case "cloudy":
+                  console.log("Weather is cloudy");
+                  isCloudy.value = true;
+                  break;
+                   
+                default:
+                  console.log("Not cloudy");
+                  isCloudy.value = false;
+                  break;
+              }           
+            } 
+          });
+        }
+    });
+    </script>
+    
+  </body>
+</html>
